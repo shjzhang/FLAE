@@ -1,5 +1,6 @@
-function [Q,W] = FLAE( r_base, b_base, weights )
+function [Q,W,iter,time_poly,time_eig] = FLAE_newton( r_base, b_base, weights )
     
+    tic;
     MM=zeros(3,3);
    
     for i=1:length(b_base(1,:))
@@ -19,12 +20,19 @@ function [Q,W] = FLAE( r_base, b_base, weights )
    c=det(W);
    b=8*Hx3*Hy2*Hz1 - 8*Hx2*Hy3*Hz1 - 8*Hx3*Hy1*Hz2 + 8*Hx1*Hy3*Hz2 + 8*Hx2*Hy1*Hz3 - 8*Hx1*Hy2*Hz3;
    a=-2*Hx1*Hx1 - 2*Hx2*Hx2 - 2*Hx3*Hx3 - 2*Hy1*Hy1 - 2*Hy2*Hy2 - 2*Hy3*Hy3 - 2*Hz1*Hz1 - 2*Hz2*Hz2 - 2*Hz3*Hz3;
+   
+   time_poly=toc;
 
-   temp1=2*a*a*a+27*b*b-72*a*c;
-   DD=(sqrt(-4*(a*a+12*c)^3+temp1*temp1)+temp1)^(0.333333333333333);
-   temp2=2.51984209978975*(a*a+12*c)/DD+1.5874010519682*DD;
-   temp3=sqrt(-4*a+temp2);
-   lambda=real(0.204124145231932*(temp3+sqrt(-8*a-temp2-29.3938769133981*b/temp3)));
+   tic;
+   lambda=1.0;
+   old_lambda=0.0;
+   iter=0;
+
+   while(abs(old_lambda-lambda)>1e-5)
+    old_lambda=lambda;
+    lambda=lambda-((lambda^4+a*lambda^2+b*lambda+c)/(4*lambda^3+2*a*lambda+b));
+    iter=iter+1;
+   end
    
    G=W-lambda*eye(4);
    
@@ -53,6 +61,7 @@ function [Q,W] = FLAE( r_base, b_base, weights )
  
    Q=q./norm(q);
    
+   time_eig=toc;
    
    
 end
