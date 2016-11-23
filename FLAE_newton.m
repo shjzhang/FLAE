@@ -1,3 +1,8 @@
+%Fast Linear Attitude Estimator from Vector Observations
+%Authors: Jin Wu, Zebo Zhou et al.
+%Copytight (c) 2016
+
+
 function [Q,W,iter,time_poly,time_eig] = FLAE_newton( r_base, b_base, weights )
     
     tic;

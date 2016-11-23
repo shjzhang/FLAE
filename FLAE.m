@@ -1,3 +1,7 @@
+%Fast Linear Attitude Estimator from Vector Observations
+%Authors: Jin Wu, Zebo Zhou et al.
+%Copytight (c) 2016
+
 function [Q,W] = FLAE( r_base, b_base, weights )
     
     MM=zeros(3,3);
